@@ -1,9 +1,9 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 
-#include "game_manager.h"
+#include "sailgame/common/game_manager.h"
+#include "sailgame/codenames/msg_builder.h"
 #include "state.h"
-#include "msg_builder.h"
 
 using SailGame::Common::NetworkInterface;
 using SailGame::Common::GameManager;

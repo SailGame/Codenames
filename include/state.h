@@ -1,9 +1,10 @@
 #pragma once
 
 #include <map>
-#include <codenames/codenames.pb.h>
+#include <sailgame_pb/codenames/codenames.pb.h>
 
-#include "types.h"
+#include "sailgame/common/types.h"
+#include "sailgame/codenames/word.h"
 
 namespace SailGame { namespace Game {
 
