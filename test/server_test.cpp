@@ -64,7 +64,7 @@ public:
     
 
     void SetUp() {
-        spdlog::set_level(spdlog::level::err);
+        spdlog::set_level(spdlog::level::debug);
         EXPECT_CALL(*mMockStub, ProviderRaw(_))
             .Times(AtLeast(1)).WillOnce(Return(mMockStream));
         mThread = std::make_unique<std::thread>([&] {
@@ -95,21 +95,12 @@ public:
             *MsgBuilder::CreateRegisterArgs(0, "codename", "CODENAMES", 10, 4));
         ProcessMsgFromCore(*MsgBuilder::CreateRegisterRet(0, ErrorNumber::OK));
 
-        EXPECT_CALL(*mMockStream, Write(
-            AllOf(NotifyMsgArgsMatcher(ErrorNumber::OK, roomId, userIds[0]),
-                StartStateMsgMatcher()), _)).Times(1);
-
-        EXPECT_CALL(*mMockStream, Write(
-            AllOf(NotifyMsgArgsMatcher(ErrorNumber::OK, roomId, userIds[1]),
-                StartStateMsgMatcher()), _)).Times(1);
-
-        EXPECT_CALL(*mMockStream, Write(
-            AllOf(NotifyMsgArgsMatcher(ErrorNumber::OK, roomId, userIds[2]),
-                StartStateMsgMatcher()), _)).Times(1);
-
-        EXPECT_CALL(*mMockStream, Write(
-            AllOf(NotifyMsgArgsMatcher(ErrorNumber::OK, roomId, userIds[3]),
-                StartStateMsgMatcher()), _)).Times(1);
+        for(auto &userId : userIds)
+        {
+            EXPECT_CALL(*mMockStream, Write(
+                AllOf(NotifyMsgArgsMatcher(ErrorNumber::OK, roomId, userId),
+                    StartStateMsgMatcher()), _)).Times(1);            
+        }
         
         ProcessMsgFromCore(*MsgBuilder::CreateStartGameArgs(0, roomId, userIds,
             MsgBuilder::CreateStartGameSettings(15)));
